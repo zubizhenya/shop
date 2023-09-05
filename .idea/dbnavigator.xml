@@ -20,14 +20,16 @@
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files />
+    <open-files>
+      <object connection-id="c4df7996-30d4-416d-9f92-ab73fca4856d" object-ref="schemas/main/tables/bboard_bb" />
+    </open-files>
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
     <filter-actions connection-id="c4df7996-30d4-416d-9f92-ab73fca4856d" dataset="main.auth_user" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="c4df7996-30d4-416d-9f92-ab73fca4856d" dataset="main.auth_user_user_permissions" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="c4df7996-30d4-416d-9f92-ab73fca4856d" dataset="main.bboard_bb" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="c4df7996-30d4-416d-9f92-ab73fca4856d" dataset="main.django_content_type" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="c4df7996-30d4-416d-9f92-ab73fca4856d" dataset="main.bboard_rubric" active-filter-id="" />
+    <filter-actions connection-id="c4df7996-30d4-416d-9f92-ab73fca4856d" dataset="main.bboard_rubric" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.ExecutionManager">
     <retain-sticky-names value="false" />

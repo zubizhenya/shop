@@ -1,0 +1,18 @@
+{% extends "layout/basic.html" %}
+
+{% block title %}Поиск по дате{% endblock %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Filter</button>
+    </form>
+
+    <ul>
+        {% for bb in bbs %}
+            <li>{{ bb.title }} - {{ bb.published }}</li>
+        {% empty %}
+            <li>No ads found.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

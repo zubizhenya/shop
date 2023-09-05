@@ -3,9 +3,17 @@
 {% for bb in bbs %}
 <div>
     <H2><a href="{% url 'detail' pk=bb.pk %}">{{ bb.title }}</a></H2>
+    <p><a href="{% url 'update' pk=bb.pk %}">Изменить</a></p>
     <p><a href="{% url 'by_rubric' bb.rubric.pk %}">{{ bb.rubric.name }}</a></p>
     <p>{{ bb.published|date:'d.m.Y H:i:s' }}</p>
+
+
 </div>
+<p>
+    {% for d in date_list %}
+    {{ d.year }}
+    {% endfor %}
+</p>
 {% endfor %}
 {% endblock %}
 

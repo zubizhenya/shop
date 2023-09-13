@@ -1,5 +1,8 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.contrib import messages
+from django.core.exceptions import ValidationError
+from django.core.paginator import Paginator
+from django.shortcuts import render, redirect, reverse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from .models import Bb, Rubric
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -7,7 +10,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.dates import ArchiveIndexView, DateDetailView
 from django.views.generic.list import ListView
-from .forms import BbForm, DateFilterForm
+from .forms import BbForm, DateFilterForm, RubricSearchForm
 from django.urls import reverse_lazy
 
 class BbByRybricView(TemplateView):
@@ -26,11 +29,53 @@ class BbDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['rubrics'] = Rubric.objects.all()
         return context
-def index(request):
-    bbs = Bb.objects.all()
-    rubrics = Rubric.objects.all()
-    context = {'bbs': bbs, 'rubrics': rubrics}
-    return render(request, 'bboard/index.html', context)
+
+
+class BbFirstPageView(ListView):
+    template_name = 'bboard/index.html'
+    context_object_name = 'bbs'
+    model = Bb
+
+    def get_queryset(self):
+        # Возвращаем queryset для модели Bb
+        return Bb.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        form = RubricSearchForm()
+        rubrics = Rubric.objects.all()
+        page_num = self.request.GET.get('page', 1)
+        paginator = Paginator(self.get_queryset(), 2)  # Используем get_queryset() для получения queryset
+        page = paginator.get_page(page_num)
+        return render(request, 'bboard/index.html', {'form': form, 'rubrics': rubrics, 'page': page})
+
+    def post(self, request, *args, **kwargs):
+        form = RubricSearchForm(request.POST)
+        rubrics = Rubric.objects.all()
+        page_num = self.request.GET.get('page', 1)
+        paginator = Paginator(self.get_queryset(), 2)
+        page = paginator.get_page(page_num)
+
+        try:
+            if form.is_valid():
+                rubric_search = form.cleaned_data['rubric']
+                bbr = Rubric.objects.filter(name__icontains=rubric_search).first()
+
+                if bbr:
+                    return HttpResponseRedirect(reverse('by_rubric', kwargs={'rubric_id': bbr.pk}))
+
+                if not bbr:
+                    raise ValidationError('Неверно введена рубрика', code='invalid_rubric')
+        except ValidationError as e:
+                    # Обработка ошибки ValidationError
+            error_message = e.messages[0]  # Получаем текст ошибки из сообщения ValidationError
+            return render(request, 'bboard/index.html',
+                                  {'form': form, 'rubrics': rubrics, 'page': page, 'error_message': error_message})
+
+
+
+
+
+
 
 class BbCreateView(CreateView):
     template_name = 'bboard/create.html'
@@ -92,7 +137,7 @@ class BbFilterView(ListView):
     def get(self, request, *args, **kwargs):
         form = DateFilterForm()
         bbs = []
-        return render(request, self.template_name, {'form': form, 'bbs': bbs})
+        return render(request, 'bboard/search.html', {'form': form, 'bbs': bbs})
 
 
     def post(self, request, *args, **kwargs):
@@ -102,8 +147,8 @@ class BbFilterView(ListView):
             end_date = form.cleaned_data['end_date']
             bbs = Bb.objects.filter(published__range=(start_date, end_date))
         else:
-            bbs = Bb.objects.all()
+            bbs = []
 
-        return render(request, self.template_name, {'form': form, 'bbs': bbs})
+        return render(request, 'bboard/search.html', {'form': form, 'bbs': bbs})
 
 # Create your views here.

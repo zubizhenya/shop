@@ -1,5 +1,7 @@
 from django.urls import path
-from .views import index, BbByRybricView, BbCreateView, BbDetailView, BbUpdateView,BbDeleteView, BbIndexView,BbDateDetailVeiw,BbFilterView
+from . import views
+from .views import (BbByRybricView, BbCreateView, BbDetailView, BbUpdateView,BbDeleteView, BbIndexView,
+                    BbDateDetailVeiw,BbFilterView, BbFirstPageView)
 
 
 urlpatterns = [
@@ -10,5 +12,5 @@ urlpatterns = [
     path('delete/<int:pk>/', BbDeleteView.as_view(), name='delete'),
     path('search/', BbFilterView.as_view(), name='search'),
     path('detail/<int:year>/<int:month>/<int:day>/<int:pk>/', BbDateDetailVeiw.as_view(), name='detail'),
-    path('', index, name='index'),
+    path('', BbFirstPageView.as_view(), name='index'),
 ]

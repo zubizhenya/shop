@@ -13,6 +13,7 @@ class Rubric(models.Model):
         verbose_name = 'Рубрика'
         ordering = ['name']
 
+
 class Bb(models.Model):
     class Kinds(models.TextChoices):
         BUY = 'b', 'Куплю'

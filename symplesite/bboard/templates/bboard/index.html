@@ -1,19 +1,47 @@
 {% extends "layout/basic.html" %}
 {% block content %}
-{% for bb in bbs %}
+
+
+{% for bb in page.object_list %}
 <div>
     <H2><a href="{% url 'detail' pk=bb.pk %}">{{ bb.title }}</a></H2>
     <p><a href="{% url 'update' pk=bb.pk %}">Изменить</a></p>
     <p><a href="{% url 'by_rubric' bb.rubric.pk %}">{{ bb.rubric.name }}</a></p>
     <p>{{ bb.published|date:'d.m.Y H:i:s' }}</p>
 
-
 </div>
-<p>
-    {% for d in date_list %}
-    {{ d.year }}
-    {% endfor %}
-</p>
 {% endfor %}
+<div>
+    {% if page.has_previous %}
+    <a href="?page={{ page.previous_page_number }}">&lt;</a>
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    {% endif %}
+    {{ page.number }} из {{ page.paginator.num_pages }}
+    {% if page.has_next %}
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    <a href="?page={{ page.next_page_number }}">&gt;</a>
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    {% endif %}
+</div>
+
+<div>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Поиск</button>
+    </form>
+
+    <ul>
+        {% for rubric_result in bbr %}
+            <li>{{ rubric_result.name }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% if error_message %}
+<div class="alert alert-danger">
+    {{ error_message }}
+</div>
+{% endif %}
+
 {% endblock %}
 

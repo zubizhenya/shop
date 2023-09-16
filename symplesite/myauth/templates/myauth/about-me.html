@@ -5,6 +5,7 @@
     {% if user.is_authenticated %}
         <h2>Details</h2>
         <p>First name:{{ user.username }}</p>
+        <p></p><a href="{% url 'passwordchange' %}">Change password</a></p>
     {% else %}
         <h2>User is anonimous</h2>
     {% endif %}

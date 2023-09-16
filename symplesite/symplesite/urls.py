@@ -19,6 +19,7 @@ from django.urls import path, include
 from bboard.views import BbFirstPageView
 
 urlpatterns = [
+    path('myauth/', include('myauth.urls')),
     path('bboard/', include('bboard.urls')),
     path('admin/', admin.site.urls),
 ]

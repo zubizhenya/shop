@@ -4,11 +4,15 @@
     <h1>User info</h1>
     {% if user.is_authenticated %}
         <h2>Details</h2>
-        <p>First name:{{ user.username }}</p>
-        <p></p><a href="{% url 'passwordchange' %}">Change password</a></p>
+        <p>Login:{{ user.username }}</p>
+        <p>First name:{{ user.first_name }}</p>
+        <p>Last name:{{ user.last_name }}</p>
+        <p>Email:{{ user.email }}</p>
     {% else %}
         <h2>User is anonimous</h2>
     {% endif %}
-<a href="{% url 'logout' %}">Logout</a>
+<p><a href="{% url 'logout' %}">Logout</a></p>
+<p><a href="{% url 'userchangedetails' %}">Change details</a></p>
+<p><a href="{% url 'passwordchange' %}">Change password</a></p>
 <p><a href="{% url 'index' %}">Return on index</a></p>
 {% endblock %}

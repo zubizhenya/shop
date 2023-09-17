@@ -1,11 +1,13 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, UserChangeForm
+from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordChangeView
 from django.http import HttpRequest
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView, UpdateView
+from django import forms
 
 
 
@@ -18,8 +20,17 @@ class AboutMeView(TemplateView):
         user = self.request.user  # Получаем текущего пользователя
         context['user'] = user  # Передаем только текущего пользователя в контекст
         return context
+
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(label='Email') # Добавляем поле email
+    first_name = forms.CharField(label='First name')
+    last_name = forms.CharField(label='Last name')
+
+    class Meta:
+        model = User  # Укажите вашу модель пользователя (обычно User)
+        fields = UserCreationForm.Meta.fields + ('email', 'first_name', 'last_name')
 class RegisterView(CreateView):
-    form_class = UserCreationForm
+    form_class = CustomUserCreationForm
     template_name = 'myauth/register.html'
     success_url = reverse_lazy('index')
 
@@ -27,6 +38,9 @@ class RegisterView(CreateView):
         response = super().form_valid(form)
         username = form.cleaned_data.get('username')
         password = form.cleaned_data.get('password1')
+        email = form.cleaned_data.get('email')
+        first_name = form.cleaned_data.get('first_name')
+        last_name = form.cleaned_data.get('last_name')
         user = authenticate(self.request, username=username, password=password,)
         if user is not None:
             login(self.request, user)
@@ -64,3 +78,26 @@ class PasswordChangeView(PasswordChangeView):
             form.add_error('old_password', 'Текущий пароль неверен.')
             return self.form_invalid(form)
 
+class CustomUserChangeForm(UserChangeForm):
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email')
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields.pop('password')
+class UserChangeView(UpdateView):
+    model = User
+    template_name = 'myauth/userchangedetails.html'
+    success_url = reverse_lazy('about-me')
+    form_class = CustomUserChangeForm
+    def get_object(self, queryset=None):
+        # Возвращает текущего пользователя, который хочет обновить свои данные
+        return self.request.user
+    def form_valid(self, form):
+        user = self.request.user
+        username = form.cleaned_data.get(form)
+        first_name = form.cleaned_data.get(form)
+        last_name = form.cleaned_data.get(form)
+        email = form.cleaned_data.get(form)
+        user.save()
+        return super().form_valid(form)

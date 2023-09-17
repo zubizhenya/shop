@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from .views import (BbByRybricView, BbCreateView, BbDetailView, BbUpdateView,BbDeleteView, BbIndexView,
-                    BbDateDetailVeiw,BbFilterView, BbFirstPageView)
+                    BbDateDetailVeiw,BbFilterView, BbFirstPageView, PermissionErrorView)
 
 
 urlpatterns = [
@@ -12,5 +12,6 @@ urlpatterns = [
     path('delete/<int:pk>/', BbDeleteView.as_view(), name='delete'),
     path('search/', BbFilterView.as_view(), name='search'),
     path('detail/<int:year>/<int:month>/<int:day>/<int:pk>/', BbDateDetailVeiw.as_view(), name='detail'),
+    path('permissionerror/', PermissionErrorView.as_view(), name='permissionerror'),
     path('', BbFirstPageView.as_view(), name='index'),
 ]

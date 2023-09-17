@@ -1,0 +1,10 @@
+{% extends 'myauth/base.html' %}
+{% block title %}User details change{% endblock %}
+{% block body %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Save">
+    </form>
+    <a href="{% url 'about-me' %}">Back to about-me</a>
+{% endblock %}

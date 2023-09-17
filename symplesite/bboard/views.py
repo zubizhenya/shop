@@ -1,5 +1,6 @@
 from django.contrib import messages
-from django.core.exceptions import ValidationError
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ValidationError, PermissionDenied
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse, HttpResponseRedirect
@@ -71,13 +72,10 @@ class BbFirstPageView(ListView):
             return render(request, 'bboard/index.html',
                                   {'form': form, 'rubrics': rubrics, 'page': page, 'error_message': error_message})
 
-
-
-
-
-
-
-class BbCreateView(CreateView):
+class PermissionErrorView(TemplateView):
+    template_name = 'bboard/permissionerror.html'
+class BbCreateView(LoginRequiredMixin, CreateView):
+    login_url = 'permissionerror'
     template_name = 'bboard/create.html'
     form_class = BbForm
     success_url = reverse_lazy('index')
@@ -86,6 +84,7 @@ class BbCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context['rubrics'] = Rubric.objects.all()
         return context
+
 
 class BbUpdateView(UpdateView):
     model = Bb

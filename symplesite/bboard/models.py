@@ -1,6 +1,7 @@
 from django.db import models
 from django.core import validators
 from django.core.exceptions import ValidationError
+from django.conf import settings
 
 
 class Rubric(models.Model):
@@ -41,3 +42,7 @@ class Bb(models.Model):
         verbose_name = 'Обьявление'
         ordering = ['-published']
 
+class Notes(models.Model):
+    bb = models.ForeignKey('Bb', null=True, on_delete=models.CASCADE, verbose_name='Товар', related_name='product')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    comment = models.TextField(null=True, blank=True, verbose_name='Комментарий')

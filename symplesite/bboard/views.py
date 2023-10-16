@@ -5,14 +5,15 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
-from .models import Bb, Rubric
+from .models import Bb, Rubric, Notes
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.dates import ArchiveIndexView, DateDetailView
 from django.views.generic.list import ListView
-from .forms import BbForm, DateFilterForm, RubricSearchForm
+from .forms import BbForm, DateFilterForm, RubricSearchForm, NotesForm
 from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404
 
 class BbByRybricView(TemplateView):
     template_name = 'bboard/by_rubric.html'
@@ -24,12 +25,32 @@ class BbByRybricView(TemplateView):
         context['current_rubric'] = Rubric.objects.get(pk=context['rubric_id'])
         return context
 
+
+
 class BbDetailView(DetailView):
     model = Bb
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['rubrics'] = Rubric.objects.all()
+        context['form'] = NotesForm()
+        context['notes'] = self.object.product.all()
         return context
+
+    def post(self, request, *args, **kwargs):
+        form = NotesForm(request.POST)
+        self.object = self.get_object()  # Get the current object
+
+        if form.is_valid():
+            note = form.save(commit=False)
+            note.author = self.request.user
+            note.bb = get_object_or_404(Bb, id=self.kwargs.get('pk'))  # связываем комментарий с товаром
+            note.save()
+            return redirect('detail', pk=self.kwargs.get('pk'))  # здесь 'bb_detail' - это имя вашего DetailView в urls.py
+        else:
+            # Если форма не прошла валидацию, отображаем страницу с ошибками
+            context = self.get_context_data()
+            context['form'] = form
+            return render(request, self.template_name, context)
 
 
 class BbFirstPageView(ListView):
@@ -150,4 +171,3 @@ class BbFilterView(ListView):
 
         return render(request, 'bboard/search.html', {'form': form, 'bbs': bbs})
 
-# Create your views here.

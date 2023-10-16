@@ -9,4 +9,22 @@
 <p>Рубрика : {{ bb.rubric.name }}</p>
 <p>{{ bb.content }}</p>
 <p>Цена : {{ bb.price  }}</p>
+<!-- Показываем форму для ввода комментария -->
+<h3>Оставить комментарий:</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Опубликовать комментарий</button>
+</form>
+
+<!-- Показываем существующие комментарии -->
+<h3>Комментарии:</h3>
+{% for note in notes %}
+    <div>
+        <p><strong>Автор: </strong> {{ note.author }}</p>
+        <p><strong>Комментарий: </strong> {{ note.comment }}</p>
+    </div>
+{% empty %}
+    <p>Пока что нет комментариев.</p>
+{% endfor %}
 {% endblock %}

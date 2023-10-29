@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 from .views import (BbByRybricView, BbCreateView, BbDetailView, BbUpdateView,BbDeleteView, BbIndexView,
-                    BbDateDetailVeiw,BbFilterView, BbFirstPageView, PermissionErrorView)
+                    BbDateDetailVeiw,BbFilterView, BbFirstPageView, PermissionErrorView,)
 
 
 urlpatterns = [

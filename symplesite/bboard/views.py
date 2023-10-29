@@ -37,20 +37,30 @@ class BbDetailView(DetailView):
         return context
 
     def post(self, request, *args, **kwargs):
+        if 'delete_note' in request.POST:  # Проверяем, был ли отправлен запрос на удаление
+            note_id = request.POST.get('note_id')  # Получаем идентификатор комментария, который нужно удалить
+            note = get_object_or_404(Notes, pk=note_id)
+
+            # Проверяем, что пользователь имеет право на удаление комментария
+            if note.author == request.user:
+                note.delete()
+                return redirect('detail', pk=self.kwargs.get('pk'))
         form = NotesForm(request.POST)
-        self.object = self.get_object()  # Get the current object
+        self.object = self.get_object()
 
         if form.is_valid():
             note = form.save(commit=False)
             note.author = self.request.user
-            note.bb = get_object_or_404(Bb, id=self.kwargs.get('pk'))  # связываем комментарий с товаром
+            note.bb = get_object_or_404(Bb, id=self.kwargs.get('pk'))
             note.save()
-            return redirect('detail', pk=self.kwargs.get('pk'))  # здесь 'bb_detail' - это имя вашего DetailView в urls.py
+            return redirect('detail', pk=self.kwargs.get('pk'))
         else:
-            # Если форма не прошла валидацию, отображаем страницу с ошибками
             context = self.get_context_data()
             context['form'] = form
             return render(request, self.template_name, context)
+
+
+
 
 
 class BbFirstPageView(ListView):

@@ -23,6 +23,13 @@
     <div>
         <p><strong>Автор: </strong> {{ note.author }}</p>
         <p><strong>Комментарий: </strong> {{ note.comment }}</p>
+        {% if user.is_superuser or user == note.author %}
+            <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="note_id" value="{{ note.id }}">
+                    <button type="submit" name="delete_note">Удалить комментарий</button>
+            </form>
+        {% endif %}
     </div>
 {% empty %}
     <p>Пока что нет комментариев.</p>

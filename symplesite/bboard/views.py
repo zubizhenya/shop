@@ -11,7 +11,7 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.dates import ArchiveIndexView, DateDetailView
 from django.views.generic.list import ListView
-from .forms import BbForm, DateFilterForm, RubricSearchForm, NotesForm
+from .forms import BbForm, DateFilterForm, SomeSearchForm, NotesForm
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 
@@ -42,7 +42,7 @@ class BbDetailView(DetailView):
             note = get_object_or_404(Notes, pk=note_id)
 
             # Проверяем, что пользователь имеет право на удаление комментария
-            if note.author == request.user:
+            if note.author == request.user or request.user.is_superuser:
                 note.delete()
                 return redirect('detail', pk=self.kwargs.get('pk'))
         form = NotesForm(request.POST)
@@ -73,30 +73,42 @@ class BbFirstPageView(ListView):
         return Bb.objects.all()
 
     def get(self, request, *args, **kwargs):
-        form = RubricSearchForm()
+        form = SomeSearchForm()
         rubrics = Rubric.objects.all()
         page_num = self.request.GET.get('page', 1)
         paginator = Paginator(self.get_queryset(), 2)  # Используем get_queryset() для получения queryset
         page = paginator.get_page(page_num)
-        return render(request, 'bboard/index.html', {'form': form, 'rubrics': rubrics, 'page': page})
+        query = request.GET.get('query', '')
+        suggestions = []
+        if query:
+            bbs = Bb.objects.filter(title__icontains=query)
+            bbr = Rubric.objects.filter(name__icontains=query)
+
+            suggestions.extend([bb.title for bb in bbs])
+            suggestions.extend([rubric.name for rubric in bbr])
+        return render(request, 'bboard/index.html', {'form': form, 'rubrics': rubrics, 'page': page, 'suggestions': suggestions, })
 
     def post(self, request, *args, **kwargs):
-        form = RubricSearchForm(request.POST)
+        form = SomeSearchForm(request.POST)
         rubrics = Rubric.objects.all()
+        bbs = Bb.objects.all()
         page_num = self.request.GET.get('page', 1)
         paginator = Paginator(self.get_queryset(), 2)
         page = paginator.get_page(page_num)
 
         try:
             if form.is_valid():
-                rubric_search = form.cleaned_data['rubric']
-                bbr = Rubric.objects.filter(name__icontains=rubric_search).first()
+                some_search = form.cleaned_data['query']
+                bbs = Bb.objects.filter(title__icontains=some_search).first()
+                bbr = Rubric.objects.filter(name__icontains=some_search).first()
 
+                if bbs:
+                    return HttpResponseRedirect(reverse('detail', kwargs={'pk': bbs.pk}))
                 if bbr:
                     return HttpResponseRedirect(reverse('by_rubric', kwargs={'rubric_id': bbr.pk}))
+                if not bbs or bbr:
+                    raise ValidationError('Нет совпадений', code='invalid_rubric')
 
-                if not bbr:
-                    raise ValidationError('Неверно введена рубрика', code='invalid_rubric')
         except ValidationError as e:
                     # Обработка ошибки ValidationError
             error_message = e.messages[0]  # Получаем текст ошибки из сообщения ValidationError

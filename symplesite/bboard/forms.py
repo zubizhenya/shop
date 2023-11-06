@@ -9,8 +9,11 @@ class BbForm(forms.ModelForm):
         model = Bb
         fields = ('title', 'content', 'price', 'rubric', 'kind')
 
-class RubricSearchForm(forms.Form):
-    rubric = forms.CharField(max_length=100, label='Поиск по рубрике')
+
+class SomeSearchForm(forms.Form):
+    query = forms.CharField(max_length=100, label='Поиск по товару')
+
+
 
 
 class DateFilterForm(forms.Form):

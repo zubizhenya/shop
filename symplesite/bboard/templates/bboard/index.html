@@ -36,11 +36,6 @@
         <button type="submit">Поиск</button>
     </form>
 
-    <ul>
-        {% for rubric_result in bbr %}
-            <li>{{ rubric_result.name }}</li>
-        {% endfor %}
-    </ul>
 </div>
 {% if error_message %}
 <div class="alert alert-danger">

@@ -14,6 +14,9 @@ from django.views.generic.list import ListView
 from .forms import BbForm, DateFilterForm, SomeSearchForm, NotesForm
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
+from django.db import transaction
+
+
 
 class BbByRybricView(TemplateView):
     template_name = 'bboard/by_rubric.html'
@@ -122,6 +125,7 @@ class BbCreateView(LoginRequiredMixin, CreateView):
     template_name = 'bboard/create.html'
     form_class = BbForm
     success_url = reverse_lazy('index')
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

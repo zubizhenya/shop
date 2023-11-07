@@ -21,5 +21,6 @@ from bboard.views import BbFirstPageView
 urlpatterns = [
     path('myauth/', include('myauth.urls')),
     path('bboard/', include('bboard.urls')),
+    path('captcha/', include('captcha.urls')),
     path('admin/', admin.site.urls),
 ]

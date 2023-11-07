@@ -3,6 +3,8 @@ from django.forms import ModelForm
 from .models import Bb, Rubric, Notes
 from django import forms
 from django.forms.widgets import DateInput
+from captcha.fields import CaptchaField
+
 
 class BbForm(forms.ModelForm):
     class Meta:
@@ -12,6 +14,8 @@ class BbForm(forms.ModelForm):
 
 class SomeSearchForm(forms.Form):
     query = forms.CharField(max_length=100, label='Поиск по товару')
+    captcha = CaptchaField(label='Введите текст с картинки',
+                           error_messages={'invalid': 'Неправильный текст'})
 
 
 

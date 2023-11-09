@@ -4,34 +4,34 @@
 
 {% block content %}
 <h2>{{ bb.title }}</h2>
-<p><a href="{% url 'update' pk=bb.pk %}">Изменить</a></p>
-<p><a href="{% url 'delete' pk=bb.pk %}">Удалить</a></p>
-<p>Рубрика : {{ bb.rubric.name }}</p>
+<p><a href="{% url 'update' pk=bb.pk %}">Change</a></p>
+<p><a href="{% url 'delete' pk=bb.pk %}">Delete</a></p>
+<p>Rubric : {{ bb.rubric.name }}</p>
 <p>{{ bb.content }}</p>
-<p>Цена : {{ bb.price  }}</p>
+<p>Price : {{ bb.price  }}</p>
 <!-- Показываем форму для ввода комментария -->
-<h3>Оставить комментарий:</h3>
+<h3>Leave a comment:</h3>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Опубликовать комментарий</button>
+    <button type="submit">Post a comment</button>
 </form>
 
 <!-- Показываем существующие комментарии -->
-<h3>Комментарии:</h3>
+<h3>Comments:</h3>
 {% for note in notes %}
     <div>
-        <p><strong>Автор: </strong> {{ note.author }}</p>
-        <p><strong>Комментарий: </strong> {{ note.comment }}</p>
+        <p><strong>Autor: </strong> {{ note.author }}</p>
+        <p><strong>Comment: </strong> {{ note.comment }}</p>
         {% if user.is_superuser or user == note.author %}
             <form method="post">
                     {% csrf_token %}
                     <input type="hidden" name="note_id" value="{{ note.id }}">
-                    <button type="submit" name="delete_note">Удалить комментарий</button>
+                    <button type="submit" name="delete_note">Delete comment</button>
             </form>
         {% endif %}
     </div>
 {% empty %}
-    <p>Пока что нет комментариев.</p>
+    <p>No comments yet.</p>
 {% endfor %}
 {% endblock %}

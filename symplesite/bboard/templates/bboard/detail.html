@@ -4,9 +4,9 @@
 
 {% block content %}
 <h2>{{ bb.title }}</h2>
-<p><a href="{% url 'update' pk=bb.pk %}">Изменить</a></p>
-<p><a href="{% url 'delete' pk=bb.pk %}">Удалить</a></p>
-<p>Рубрика : {{ bb.rubric.name }}</p>
+<p><a href="{% url 'update' pk=bb.pk %}">Change</a></p>
+<p><a href="{% url 'delete' pk=bb.pk %}">Delete</a></p>
+<p>Rubric : {{ bb.rubric.name }}</p>
 <p>{{ bb.content }}</p>
-<p>Цена : {{ bb.price  }}</p>
+<p>Price : {{ bb.price  }}</p>
 {% endblock %}

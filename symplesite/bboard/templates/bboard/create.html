@@ -1,11 +1,11 @@
 {% extends "layout/basic.html" %}
 
-{% block title %}Добавление обьявления{% endblock %}
+{% block title %}Adding an advertisement{% endblock %}
 {% block content %}
-<h2>Добавление обьявления</h2>
+<h2>Adding an advertisement</h2>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Добавить">
+    <input type="submit" value="Add">
 </form>
 {% endblock %}

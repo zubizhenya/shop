@@ -1,11 +1,11 @@
 {% extends "layout/basic.html" %}
 
-{% block title %}Изменение обьявления{% endblock %}
+{% block title %}Change of advertisement{% endblock %}
 {% block content %}
-<h2>Изменение обьявления</h2>
+<h2>ИChange of advertisement</h2>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Изменить">
+    <input type="submit" value="Change">
 </form>
 {% endblock %}

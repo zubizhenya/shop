@@ -8,12 +8,12 @@
     </head>
     <body>
         <header>
-            <h1>Обьявления</h1>
+            <h1>Ads</h1>
         </header>
         <nav>
-            <a href="{% url 'index' %}">Главная</a>
-            <a href="{% url 'add' %}">Добавить</a>
-            <a href="{% url 'search' %}">Поиск по дате</a>
+            <a href="{% url 'index' %}">Main</a>
+            <a href="{% url 'add' %}">Add product</a>
+            <a href="{% url 'search' %}">Search product by date</a>
             {% for rubric in rubrics %}
             <a href="{% url 'by_rubric' rubric.pk %}">{{ rubric.name }}</a>
             {% endfor %}

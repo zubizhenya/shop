@@ -13,9 +13,9 @@ class BbForm(forms.ModelForm):
 
 
 class SomeSearchForm(forms.Form):
-    query = forms.CharField(max_length=100, label='Поиск по товару')
-    captcha = CaptchaField(label='Введите текст с картинки',
-                           error_messages={'invalid': 'Неправильный текст'})
+    query = forms.CharField(max_length=100, label='Search by product')
+    captcha = CaptchaField(label='Enter text from the image',
+                           error_messages={'invalid': 'Wrong text'})
 
 
 

@@ -5,44 +5,44 @@ from django.conf import settings
 
 
 class Rubric(models.Model):
-    name = models.CharField(max_length=20, db_index=True, verbose_name = 'Название')
+    name = models.CharField(max_length=20, db_index=True, verbose_name = 'title of the section')
     def __str__(self):
         return self.name
 
     class Meta:
-        verbose_name_plural = 'Рубрики'
-        verbose_name = 'Рубрика'
+        verbose_name_plural = 'Rubrics'
+        verbose_name = 'Rubric'
         ordering = ['name']
 
 
 class Bb(models.Model):
     class Kinds(models.TextChoices):
-        BUY = 'b', 'Куплю'
-        SELL = 'sell', 'Продам'
-        EXCHANGE = 'e', 'Обменяю'
-        __empty__ = 'Выберите тип публикуемого обьявления'
+        BUY = 'b', 'Buy'
+        SELL = 'sell', 'Sell'
+        EXCHANGE = 'e', 'Exchange'
+        __empty__ = 'Select the type of advertisement to be published'
 
     kind = models.CharField(max_length=10, choices=Kinds.choices, default=Kinds.SELL)
-    rubric = models.ForeignKey('Rubric', null=True, on_delete=models.PROTECT, verbose_name='Рубрика', related_name='entries')
-    title = models.CharField(max_length=50, verbose_name='Товар')
-    content = models.TextField(null=True, blank=True, verbose_name='Описание')
-    price = models.FloatField(null=True, blank=True, verbose_name='Цена')
-    published = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Опубликовано')
+    rubric = models.ForeignKey('Rubric', null=True, on_delete=models.PROTECT, verbose_name='Rubric', related_name='entries')
+    title = models.CharField(max_length=50, verbose_name='Product')
+    content = models.TextField(null=True, blank=True, verbose_name='Description')
+    price = models.FloatField(null=True, blank=True, verbose_name='Price')
+    published = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='Published')
     def clean(self):
         errors = {}
         if not self.content:
-            errors['content'] = ValidationError('Укажите описание продаваемого товара')
+            errors['content'] = ValidationError('Please provide a description of the item being sold')
         if self.price and self.price < 0:
-            errors['price'] = ValidationError('Укажите неотрицательные цены')
+            errors['price'] = ValidationError('Specify non-negative prices')
         if errors:
             raise ValidationError(errors)
 
     class Meta:
-        verbose_name_plural = 'Обьявления'
-        verbose_name = 'Обьявление'
+        verbose_name_plural = 'Ads'
+        verbose_name = 'Ad'
         ordering = ['-published']
 
 class Notes(models.Model):
-    bb = models.ForeignKey('Bb', null=True, on_delete=models.CASCADE, verbose_name='Товар', related_name='product')
+    bb = models.ForeignKey('Bb', null=True, on_delete=models.CASCADE, verbose_name='Product', related_name='product')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    comment = models.TextField(null=True, blank=True, verbose_name='Комментарий')
+    comment = models.TextField(null=True, blank=True, verbose_name='Comment')

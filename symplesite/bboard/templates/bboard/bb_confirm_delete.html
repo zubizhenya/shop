@@ -1,11 +1,11 @@
 {% extends "layout/basic.html" %}
 
-{% block title %}Удаление обьявления{% endblock %}
+{% block title %}Removing an advertisement{% endblock %}
 {% block content %}
-<h2>Удаление обьявления</h2>
+<h2>Removing an advertisement</h2>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Удалить">
+    <input type="submit" value="Delete">
 </form>
 {% endblock %}

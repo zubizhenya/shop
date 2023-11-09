@@ -26,5 +26,6 @@ python manage.py runserver
 
 * Now you can go to the main page of the project at `http://127.0.0.1:8000/bboard/`.
 * On the site you can: register new users, create/edit/delete products for sale,
-  comment on products, create categories for products, search for products by category, name,
-  date of creation.
+  comment on products, create categories for products, search for products by category, 
+  name, date of creation. I also created pagination for the product on the site. 
+  But before using the site’s tools, you need to log in.

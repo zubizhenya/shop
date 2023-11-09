@@ -17,14 +17,13 @@ python manage.py migrate
 
 ```
 python manage.py createsuperuser
-...
+```
 
 * Launch the site using the command:
 
-...
-
+```
 python manage.py runserver
-...
+```
 
 * Go to the admin panel of the project http://127.0.0.1:8000/admin/ and in the Rubrics 
 tab create a category, for example, smartphones

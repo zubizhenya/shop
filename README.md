@@ -26,7 +26,7 @@ python manage.py runserver
 ```
 
 * Go to the admin panel of the project http://127.0.0.1:8000/admin/ and in the Rubrics 
-tab create a category, for example, smartphones
+tab create a category, for example, 'smartphones'.
 
 * Now you can go to the main page of the project at `http://127.0.0.1:8000/bboard/`.
 * On the site you can: register new users, create/edit/delete products for sale,

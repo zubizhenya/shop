@@ -29,6 +29,7 @@ python manage.py runserver
 tab create a category, for example, 'smartphones'.
 
 * Now you can go to the main page of the project at `http://127.0.0.1:8000/bboard/'
+* Create a product and it will appear on the main page.
 * On the site you can: register new users, create/edit/delete products for sale,
   comment on products, create categories for products, search for products by category, 
   name, date of creation. I also created pagination for the product on the site. 
